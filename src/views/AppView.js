@@ -15,15 +15,7 @@ state = {
     isResultInvalid: false
 }
 
-// undoClick = () => {
-//     console.log('undo something');
-// }
 
-/**
- * digitClick
- * @param { integer } digit
- * @return { void } Click to digit and adds to full text
- */
 digitClick = (digit) => {
     
     if(this.state.isResultClicked){
@@ -31,9 +23,7 @@ digitClick = (digit) => {
     }else{
         let { fullText } = this.state;
 
-        // If fullText is 0, then clear it
         if(fullText === "0."){
-            // fullText = "";
         }else if(parseFloat(fullText) === 0){
             fullText = "";
         }
@@ -60,10 +50,6 @@ operationClick = (operationSign) =>{
     }
 }
 
-/**
- * dotClick
- * @return { void } Handle Dot click
- */
 dotClick = () => {
     if(this.state.isResultClicked){
         this.setState({ fullText : "0.", resultText : '', isResultClicked: false});
@@ -75,10 +61,6 @@ dotClick = () => {
 }
 
 
-/**
- * functionalButtonClick
- * @return { void } Handle multiple events
- */
 functionalButtonClick = (key) => {
     let { fullText, resultText } = this.state;
 
@@ -104,7 +86,6 @@ functionalButtonClick = (key) => {
         case "CUT_FIRST":
             this.setState({ resultText : "" });
 
-            // Delete one by one character from fullText
             if(fullText.length > 0 ){
                 let newFullText = fullText.substring(1);
                 if(newFullText == ""){
@@ -116,12 +97,10 @@ functionalButtonClick = (key) => {
             break;
         
         case "MC":
-            // Clear Memory
             localStorage.setItem('CALC_M', "0");
             break;
 
         case "MR":
-            // MR = Memory Recall uses the number in memory, acts as if you had keyed in that number yourself
             let memValue = localStorage.getItem('CALC_M') || "0";
             let newFullText = memValue;
             this.setState({ fullText : newFullText, resultText: '' });
@@ -129,21 +108,18 @@ functionalButtonClick = (key) => {
 
 
         case "M+":
-            // Memory Add takes the number on the display, adds it to the memory, and puts the result into memory
             let getMemoryValue = parseFloat(localStorage.getItem('CALC_M') || "0");
             let totalResult = parseFloat(resultText.length > 0 ? resultText : "0") + getMemoryValue;
             localStorage.setItem('CALC_M', totalResult.toString());
             break;
 
         case "M-":
-            // Memory Minus takes the number on the display, minus it to the memory, and puts the result into memory
             let memValue2 = parseFloat(localStorage.getItem('CALC_M') || "0");
             let totalResult2 = parseFloat(resultText.length > 0 ? resultText : "0") - memValue2;
             localStorage.setItem('CALC_M', totalResult2.toString());
             break;
 
         case "1/x":
-            // Get Values in FullText and 1/parse(FullText)
             try {
                 let fullTextNew = "(1/("+fullText+"))";
                 let finalResult = this.parseCalculate(fullTextNew);
@@ -189,10 +165,6 @@ functionalButtonClick = (key) => {
     }
 }
 
-/**
- * equalClick
- * @return { void } Handle Equal click
- */
 equalClick = () => {
     try {
         let finalResult = this.parseCalculate(this.state.fullText);
@@ -205,22 +177,13 @@ equalClick = () => {
     
 }
 
-
-/**
- * parseCalculate
- * @param { string } the full text for calculation
- * @return { float } Final parsed result 
- */
 parseCalculate = (fullText) => {
     let finalResult = 0;
     finalResult = Parser.evaluate(fullText);
     return finalResult;
 }
 
-/**
- * checkKeyboardEvent
- * @return { function } Check and make action if any keyboard is pressed
- */
+
 checkKeyboardEvent = (event) => {
     if(event.key === "0" || event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5" || event.key === "6" || event.key === "7" || event.key === "8" || event.key === "9") {
         this.digitClick(parseInt(event.key));
@@ -235,22 +198,16 @@ checkKeyboardEvent = (event) => {
     }
 }
 
-// Handle Key board event
 componentDidMount(){
     document.addEventListener("keydown", this.checkKeyboardEvent, false);
     localStorage.setItem('CALC_M', localStorage.getItem('CALC_M') || "0");
 }
 
-// Remove Handle Key board event
 componentWillUnmount(){
     document.removeEventListener("keydown", this.checkKeyboardEvent, false);
 }
 
 
-/**
- * printResultTextCSS
- * @return { string } css of result span
- */
 printResultTextCSS = () => {
     let css = "resultArea ";
     let { fullText, resultText } = this.state;
